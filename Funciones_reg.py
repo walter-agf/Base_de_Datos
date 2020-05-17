@@ -1,9 +1,8 @@
-import os
 import datetime
-from Funciones_dic import dic_1,dic_2,dic_usu
-from Funciones_ini import Error
-directorio_actual = os.getcwd()
-directorio = (directorio_actual+"/Base")
+from Funciones_ini import Error,visua_visi # Vasiables de uso en bsuqueda
+from Funciones_usu import verifi_usu #Variable de verificaion de usuario
+from Funciones_reg import registrado,Error_float #Variables que operan con el registro
+from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
 def Error_float(tex):
     """
 
@@ -31,7 +30,7 @@ def Error_float(tex):
         except ValueError:#en caso de ser incorrecto sige con el programa hasta que sea correcto imprimiendo un mensaje de valor incorrecto
             print (("\n"*224)+"Valor Incorrecto reingrese")
     return y#retorna el valro entero
-def registrado(directorio,tipo,Error,Error_float,dic_1,dic_2,dic_usu):
+def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est):
     ava = True
     while ava == True:
         if tipo == "Administrador":
@@ -547,4 +546,4 @@ def registrado(directorio,tipo,Error,Error_float,dic_1,dic_2,dic_usu):
             print ("\n\nValor fuera del rango\n\n")
     return ava
 #tipo =  "Administrador"
-#s  = registrado(directorio,tipo,Error,Error_float,dic_1,dic_2,dic_usu)
+#s  = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est)

@@ -1,13 +1,23 @@
-import os
-from Funciones_dic import dic_usu,dic_1,dic_2 #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
 from Funciones_ini import presentacion,Error,visua_visi # Vasiables de uso en bsuqueda
 from Funciones_usu import verifi_usu #Variable de verificaion de usuario
 from Funciones_reg import registrado,Error_float #Variables que operan con el registro
-directorio_actual = os.getcwd() #averigua en que carpeta nos encotramos
-directorio = (directorio_actual+"/Base")#Ingrea e la carpeta base en la carpeta en la que nos encontremos
-dic_usuarios = dic_usu(directorio)#Crea el dic usuarios
+from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
 ava = False # Validaar para iniciar
-presentacion(directorio)#imprime la presentacion del programa
+arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
+dic_usuarios = dic_usu(arh)
+dic_municipios,lista_municipios = dic_1(arh)
+#print (dic_municipios)
+#print (lista_municipios)
+dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+#print (dic_muni)
+#print (dic_est)
+est = dic_3(arh,est)
+#print (est)
+arh.close()
+
+
+
+presentacion()#imprime la presentacion del programa
 while ava == False:
     """
     while que se repite segun lo quiera el usuario
@@ -17,21 +27,21 @@ while ava == False:
     if ava == 1:#en caso de que sea ususario registrado
         ava,tipo = verifi_usu(dic_usuarios,Error)#averigua si el codigo de usuario esta
         if ava == True:#en caso de que el usuario alla sido validado
-            ava = registrado(directorio,tipo,Error,Error_float,dic_1,dic_2,dic_usu) #realice la funcion correspondiente al usuario
+            ava = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est) #realice la funcion correspondiente al usuario
             print ("\n"*224)
-            presentacion(directorio)#imprime la presentacion del programa
+            presentacion()#imprime la presentacion del programa
         else:
             print ("\n"*224)
-            presentacion(directorio)#imprime la presentacion del programa
+            presentacion()#imprime la presentacion del programa
     elif ava == 2:#en caso de que sea un visitante
-        ava = visua_visi(directorio,Error)#imprima la infromacion que solicita el visitante
+        ava = visua_visi(dic_municipios,dic_muni,est,dic_est,Error)#imprima la infromacion que solicita el visitante
         print ("\n"*224)
-        presentacion(directorio)#imprime la presentacion del programa
+        presentacion()#imprime la presentacion del programa
     elif ava == 3:#en caso de no queres contiuar salga
         ava = True
     else:
         print ("\n"*224)
-        presentacion(directorio)#imprime la presentacion del programa
+        presentacion()#imprime la presentacion del programa
         print ("\nValor fuera del rango") #Aviso en caso de que se selccionoa una obcion fiera del rango
         ava = False
 print ("Adios :D")#Comentario de despedida

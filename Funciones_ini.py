@@ -1,16 +1,9 @@
-import os #Importamos la libreria os para saber en que acarpeta estamos
 import datetime #Importamos esta libreria para saber la fecha actual
-from Funciones_dic import dic_1,dic_2 #Importamos estas dos funciones de del documento Funciones Dic para funcionar mas adelante 
-directorio_actual = os.getcwd()#Busca en el directorio actual
-#print (directorio_actual)
-#print ("\n",os.listdir(directorio_actual))##LISTA los documentos que estan dentro del directorio actual
-directorio = (directorio_actual+"/Base")#Le agregag el nombre de la carpeta que suponemos se encutra dentro del archvi pre instalado
-#print ("\n",directorio)
-def presentacion(directorio):
+def presentacion():
     """
     Solo hace el proceso de imprecion del menu inicial y un comentario
     """
-    x = open(directorio+"/presentacion.txt","r")
+    x = open("presentacion.txt","r")
     print (("\n"*2)+x.read())
     print ("La administración departamental, consciente de los problemas") 
     print ("que el cambio climático y la contaminación del aire puede")
@@ -20,6 +13,7 @@ def presentacion(directorio):
     print ("departamento, para recolectar datos que sirvan de insumo")
     print ("para diseñar políticas públicas que permitan mitigar los efectos")
     print ("de estos fenómenos en la población.")
+#presentacion()
 def Error(tex):
     """
 
@@ -42,7 +36,7 @@ def Error(tex):
         except ValueError:#en caso de ser incorrecto sige con el programa hasta que sea correcto imprimiendo un mensaje de valor incorrecto
             print (("\n"*224)+"Valor Incorrecto reingrese")
     return y#retorna el valro entero
-def visua_visi(directorio,Error):
+def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
     """
     
     Parameters
@@ -89,7 +83,7 @@ def visua_visi(directorio,Error):
 
         """
         day -= d #la cantidad e dias actuales menos los dias predefinidos
-        if day < 1:#si ocurrec unc cambio de mes
+        if day < 1:#si ocurrec un cambio de mes
             """
             este if pregunta en que mes fue el cambio para saber a que mes hay 
             que restar y reunbicar cantidad segun la cantidad de dias
@@ -167,7 +161,7 @@ def visua_visi(directorio,Error):
                     print (("\n"*224)+"Valor imposible, Reingrese")
                     day = Error(tex)
         return day,month,year #retorna los valores dados anteriormete para los nuevos en fecha
-    def muni_est_val(directorio,Error):
+    def muni_est_val(dic_municipios,dic_muni,Error):
         """
         
 
@@ -191,7 +185,6 @@ def visua_visi(directorio,Error):
         """
         muni = [] #Crea la lista de los municipios
         print (("\n"*224)+"Elige en que municipios deseas buscar\n")
-        dic_municipios = dic_1(directorio) #Crea un diccionario con los municipios
         for i in dic_municipios.keys():#dependiendo de las claves del diccionario
             if i < 10 : #solo organiza por estetica
                 print (i," => ",dic_municipios[i][0])
@@ -225,7 +218,6 @@ def visua_visi(directorio,Error):
                 ava = Error("\nIngrese los municipios")
                 if ava != 0:
                     muni.append(ava)
-        dic_municipios = dic_2(directorio,dic_municipios)#crea el directorio con las estaciones de cada direcorio
         #print (muni)
         est = [] #Crea la lista de estaciones
         ava = 0
@@ -235,7 +227,7 @@ def visua_visi(directorio,Error):
         print ("\n"*224)
         for i in muni:#Buscador y dependeido de lo que pdidio el usuario agrega o no a la lista
             lis = []
-            lista = dic_municipios[i]
+            lista = dic_muni[i]
             can = len(lista[1])
             if ava == 1:#En caso de que el ususario no queira agregar presonalizadamente agregaa cada estacion dentro de muni
                 for i in range (can):
@@ -290,96 +282,97 @@ def visua_visi(directorio,Error):
                     else:
                         ava = None
         return muni,est,val#retorna las cuatro lista de valores a analizar
-    def busqueda(year,month,day,directorio,mun_est_val,Error):
+    def busqueda(year,month,day,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est):
         """
-        Con base a una fecha busca los valores de datos que se encutran despues
-        de dicha fehca hasta la actualidad
         Parameters
         ----------
         year : int
-            valor de año a bsucar a partir
+            año de origen de la busqueda
         month : int
-            valor de mes a buscar
+            mes de origen de la busqueda
         day : int
-            valor de dia a buscar
-        directorio : string
-            ubicacion actual dentro del computador
-        mun_est_val : fuction
-            para sus uso dentro de la funcion
+            dia de origen de la busqueda
+        muni_est_val : fuction
+            Funcion para saber municipios estaciones y valores a analiozar
         Error : fuction
-            para su uso dentro de la funcion
-
+            Funcion par evitar errores y que se escriba str en int
+        dic_municipios : dict
+            diccionario que contiene los municipios numerados
+        dic_muni : dict
+            diccionario anidados, de estaciones y municipios
+        est : dict
+            diccionario de los ingresos informativos
+        dic_est : dict
+            diccionario de las estaciones para ubicar los ingresos informativos
+            
         Returns
         -------
-        continuar : boleano
-            si se desa continaur despues de hacer la busqueda
-
+        continuar : booleano
+            si se desea continuar o volver al menu anterior
         """
-        dic_municipios = dic_1(directorio)#crea el diccionario con los municipios
-        dic_municipios = dic_2(directorio,dic_municipios)#crea el diccionario con als esatciones incluidas tambien
-        muni,est,val = mun_est_val(directorio,Error)
-        texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-        tex = ["μg/m³","μg/m³"," °C ","  %   "]
-        imp = ""
-        sep = ""
-        for i in val:
-            """
-            for que se repite para agregar un menu de texto que nos diga cuales 
-            variable estamos analindo
-            """
-            imp = imp+texto[i-1]+" "
-            sep = sep+tex[i-1]+"  " 
-        print ("                      "+imp)
-        print ("                      "+sep,end="\n\n")
-        x = open(directorio+"/ingreso.txt","r")#abre el docuemnto ingreso
-        for i in x:
-            """
-            busca en cadad linea del docuemtno ingreso
-            para saber si corresponde dentro de los apramentos preestablecidos
-            """
-            pos = i.find(",")
-            municipio = int(i[:pos])# averigua en que municipio esta el registro
-            i = i[pos+1:]
-            pos = i.find(";")
-            estacion = int(i[:pos])#averigua en que estacion esta el municipio
-            i = i[pos+1:]
-            pos = i.find(",")
-            ubi = i[:pos]#crea la ubicacion solo con la fecha y hora para luego usarlos como clave dentro del diccionario de imprecion
-            if municipio in muni:
-                pos = muni.index(municipio)#Averigua en que posisicon de la tabla muni esta dicho municipio dado,siempre la primera posicion caso de que le usuario repita el municipio por error
-                if estacion in est[pos]:#si la estacion esta dentro de la lista esatacion
-                    pos = i.find("-")
-                    año = int(i[:pos])#averigua el año en que se encuentra dicha linea
-                    i = i[pos+1:]
-                    if año >= year :#conpara con el valor de year si es depues a antes del mismo año
-                        pos = i.find("-")
-                        mes = int(i[:pos])#averigua el mes en que esta
-                        i = i[pos+1:]
+        muni,estaciones,val = muni_est_val(dic_municipios,dic_muni,Error)
+        pos = 0
+        for i in muni:
+            muni[pos] = dic_municipios[i][0]
+            pos += 1
+        #print (muni)
+        estac = []
+        for i in muni:
+            for a in dic_est.keys():
+                ubi = dic_est[a].find(",")
+                city = dic_est[a][ubi+1:]
+                if city == i:
+                    estac.append(a)
+        #print (estac)
+        for i in est.keys():
+            if i in estac:
+                print ("\n",dic_est[i].upper(),"\n")
+                texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
+                tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                imp = ""
+                sep = ""
+                for d in val:
+                    """
+                    for que se repite para agregar un menu de texto que nos diga cuales 
+                    variable estamos analindo
+                    """
+                    imp = imp+texto[d-1]+" "
+                    sep = sep+tex[d-1]+"  " 
+                print ("                      "+imp)
+                print ("                      "+sep,end="\n\n")
+                for a in est[i]:
+                    name = a
+                    pos = name.find("-")
+                    año = int(name[:pos])#averigua el año en que se encuentra dicha linea
+                    name = name[pos+1:]
+                    if año >= year:
+                        pos = name.find("-")
+                        mes = int(name[:pos])#averigua el mes en que esta
+                        name = name[pos+1:]
                         if año == year and mes < month:#compara si ese mes el el mismo del mismo año y en casod de se antes no se cuenta la linea
                             print(end="")
                         else :#en caso de que la linea si cuente
-                            pos = i.find(" ")
-                            dia = int(i[:pos])#averigua en que dia se esta valorando
-                            i = i[pos+1:]
+                            pos = name.find(" ")
+                            dia = int(name[:pos])#averigua en que dia se esta valorando
+                            name = name[pos+1:]
                             if año == year and mes == month and dia < day:#conpara si dicho dia fue antes o depues de loa analizado
                                 print (end ="")
                             else:#en caso de que dicho dia sea despues de lo analizado
-                                pos = i.find(",")
-                                i = i[pos+1:]
-                                i = i[1:-1]
+                                info = est[i][a]
+                                info = info[1:-1]
                                 lis = {}#crea el diccionario en lis para su analizis de valores
-                                for a in range (1,5):
-                                    pos = i.find(",")
-                                    lis [a] = i[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
-                                    i = i[pos+1:]
+                                for b in range (1,5):
+                                    pos = info.find(",")
+                                    lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
+                                    info = info[pos+1:]
                                 lista = []
-                                for a in val:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
-                                    lista.append(float(lis[a]))
+                                for c in val:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
+                                    lista.append(float(lis[c]))
                                 """
                                 imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
                                 """
-                                print (ubi," ",lista,"  -  ",dic_municipios[municipio][0]," _ ",dic_municipios[municipio][1][estacion][0])
-        print ("\nDesea volver al menu anterior o reingresar valores\nde municipios,estaciones y valores")
+                                print (a," ",lista)
+        print ("\n\n\nDesea volver al menu anterior o reingresar valores\nde municipios,estaciones y valores")
         ava = 0
         while ava == 0:
             """
@@ -393,113 +386,85 @@ def visua_visi(directorio,Error):
                 continuar = False
             elif ava == 2:
                 continuar = True
-        x.close()
         return continuar
-    def busqueda_2(year_1,month_1,day_1,year_2,month_2,day_2,directorio,mun_est_val,Error):
-        """
-        A difernecia de busqueda, busqueda_2 resibe dos fechas 
-        y busca los valores dentro del docuemtno ingreso que se encuentran solo dentro
-        de dichas fechas seleccionadas
-        Parameters
-        ----------
-        year_1 : int
-            Años de origen de busqueda
-        month_1 : int
-            mes de origen de busqueda
-        day_1 : int
-            dia de origen de busqueda
-        year_2 : int
-            año de final de busqueda
-        month_2 : int
-            mes de final e busqueda
-        day_2 : int
-            dia de final de busqueda
-        directorio : string
-            ubicacion en la que nos encontramos actualmente
-        mun_est_val : fuction
-            funcion que usaremos para averiguar los municipios estaciones y valores
-        Error : fuction
-            valro que usaremos para evitar errores
-
-        Returns
-        -------
-        continuar : booleano
-            despues de imprimir averigua si desea continuar, o volver al menu anterior 
-
-        """
-        dic_municipios = dic_1(directorio)#crea el diccionario dependiendo de los municipios
-        dic_municipios = dic_2(directorio,dic_municipios)#crea el diccionario con las estaciones
-        muni,est,val = mun_est_val(directorio,Error)#averigua la listas de municipios y estaciones
-        texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#valores posbiles de cantidades para val
-        tex = ["μg/m³","μg/m³"," °C ","  %   "]
-        imp = ""
-        sep = ""
-        for i in val:#crea un string que depues se sua para imprimri las cantidades den tipo de val
-            imp = imp+texto[i-1]+" "
-            sep = sep+tex[i-1]+"  " 
-        print ("                      "+imp)
-        print ("                      "+sep,end="\n\n")
-        x = open(directorio+"/ingreso.txt","r")#abre el docuemtno de ignreso donde esta la base de datos
-        for i in x:#se repite para cada line de ingreso.txt para realizar la busquea iterativa
-            pos = i.find(",")#bsuca la posicion del año
-            municipio = int(i[:pos])
-            i = i[pos+1:]#reingre el valor de i para el analisis
-            pos = i.find(";")
-            estacion = int(i[:pos])
-            i = i[pos+1:]
-            pos = i.find(",")
-            ubi = i[:pos]#crea un string dond se alaja la fehca y la hora
-            if municipio in muni:#pregunta si dicho municipio esta dentro de mun
-                pos = muni.index(municipio)#averigua la posicon dentro de muni
-                if estacion in est[pos]:#averigua si la estacion es requerida
-                    pos = i.find("-")
-                    año = int(i[:pos])#averigua el valor del año
-                    i = i[pos+1:]
-                    if año >= year_1 and año <= year_2:#compara is el año del valor es valido
-                        pos = i.find("-")
-                        mes = int(i[:pos])
-                        i = i[pos+1:]
-                        if año == year_1 and mes < month_1 or año == year_2 and mes > month_2:
-                            #compara is el mes es ibvalido por encontrarce fuera del rango de bsuqueda
+    def busqueda_2(year_1,month_1,day_1,year_2,month_2,day_2,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est):
+        muni,estaciones,val = muni_est_val(dic_municipios,dic_muni,Error)
+        pos = 0
+        for i in muni:
+            muni[pos] = dic_municipios[i][0]
+            pos += 1
+        #print (muni)
+        estac = []
+        for i in muni:
+            for a in dic_est.keys():
+                ubi = dic_est[a].find(",")
+                city = dic_est[a][ubi+1:]
+                if city == i:
+                    estac.append(a)
+        #print (estac)
+        for i in est.keys():
+            if i in estac:
+                print ("\n",dic_est[i].upper(),"\n")
+                texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
+                tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                imp = ""
+                sep = ""
+                for d in val:
+                    """
+                    for que se repite para agregar un menu de texto que nos diga cuales 
+                    variable estamos analindo
+                    """
+                    imp = imp+texto[d-1]+" "
+                    sep = sep+tex[d-1]+"  " 
+                print ("                      "+imp)
+                print ("                      "+sep,end="\n\n")
+                for a in est[i]:
+                    name = a
+                    pos = name.find("-")
+                    año = int(name[:pos])#averigua el año en que se encuentra dicha linea
+                    name = name[pos+1:]
+                    if año >= year_1 and año <= year_2:
+                        pos = name.find("-")
+                        mes = int(name[:pos])#averigua el mes en que esta
+                        name = name[pos+1:]
+                        if año == year_1 and mes < month_1 or año == year_2 and mes > month_2:#compara si ese mes el el mismo del mismo año y en casod de se antes no se cuenta la linea
                             print(end="")
-                        else:#en caso de encontrarse dento del rango de busqueda
-                            pos = i.find(" ")
-                            dia = int(i[:pos])
-                            i = i[pos+1:]
-                            if año == year_1 and mes == month_1 and dia < day_1 or año == year_2 and mes == month_2 and dia > day_1:
-                                #averigua di el dia esta dentro del rango de busqueda
-                                print(end="")
-                            else:#en caso de que el dia si este dentro del rango de busquda
-                                pos = i.find(",")
-                                i = i[pos+1:]
-                                i = i[1:-1]
-                                lis = {}#Crea el diccionario de trabajo
-                                for a in range (1,5):
-                                    pos = i.find(",")
-                                    lis [a] = i[:pos]
-                                    i = i[pos+1:]#agrega a lis todo los valores posibles de ingreso
+                        else :#en caso de que la linea si cuente
+                            pos = name.find(" ")
+                            dia = int(name[:pos])#averigua en que dia se esta valorando
+                            name = name[pos+1:]
+                            if año == year_1 and mes == month_1 and dia < day_1 or año == year_2 and mes == month_2 and dia > day_1:#conpara si dicho dia fue antes o depues de loa analizado
+                                print (end ="")
+                            else:#en caso de que dicho dia sea despues de lo analizado
+                                info = est[i][a]
+                                info = info[1:-1]
+                                lis = {}#crea el diccionario en lis para su analizis de valores
+                                for b in range (1,5):
+                                    pos = info.find(",")
+                                    lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
+                                    info = info[pos+1:]
                                 lista = []
-                                for a in val:
-                                    lista.append(float(lis[a]))#agrega los valores selecionados a la lista que leuga se imprimira
-                                #Imprecion completa de la lista segun los parametro seleccionados anteriormente 
-                                print (ubi," ",lista,"  -  ",dic_municipios[municipio][0]," _ ",dic_municipios[municipio][1][estacion][0])
-        print ("\n Dese volver al menu anterior o reingresar valores de municipios,estaciones y valores")
+                                for c in val:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
+                                    lista.append(float(lis[c]))
+                                """
+                                imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
+                                """
+                                print (a," ",lista)
+        print ("\n\n\nDesea volver al menu anterior o reingresar valores\nde municipios,estaciones y valores")
         ava = 0
         while ava == 0:
             """
-            se repite miestras el usuario ingrese valores invalidos 
-            para la deccion de continaur o no
+            while que se repite meistras el usuario ignrese un valor invalido preugndo si quiere continuar o no
             """
             ava = Error("\n\t1)Volver al menu anterior\n\t2)Reingresar")
-            if ava > 2 or ava < 0:
+            if ava > 2 or ava < 0 :
                 print ("Valor incorrecto, reingrese")
                 ava = 0
             elif ava == 1:
                 continuar = False
             elif ava == 2:
                 continuar = True
-        x.close()
-        return continuar 
+        return continuar
     ava = True
     print ("\n"*224)
     while ava == True:
@@ -523,14 +488,14 @@ def visua_visi(directorio,Error):
             #print (day,"/",month,"/",year)
             ava = True
             while ava == True:#realia la busqueda segun la cantidad de veces que el usuario quiera cambiando municipios estaciones o valores
-                ava = busqueda(year,month,day,directorio,muni_est_val,Error)
+                ava = busqueda(year,month,day,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est)
             ava = True#reorganiza el valor de ava que viene igual False
             print ("\n"*224)
         elif ava == 2:#en caso de que se quiera contar hace una semana 
             day,month,year = cambio_fecha(30,day,month,year)#Averigua la fehca hace 30 dias
             ava = True
             while ava == True:#Realiza la busqueda la cantidad de veces que el usuario quiera
-                ava = busqueda(year,month,day,directorio,muni_est_val,Error)   
+                ava = busqueda(year,month,day,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est) 
             ava = True
             print ("\n"*224)
         elif ava == 3:#EN casod e querer una fecha predestinada
@@ -542,13 +507,13 @@ def visua_visi(directorio,Error):
                 day_1,month_1,year_1 = ingreso_fecha(Error)#se repite miestras dicha fecha sea futura a la actula ya que no se tienen registros futuros
             print (("\n"*224)+"¿Dese buscar hasta la fecha actual o hasta una fecha en espesifico?")
             #en caso de tener un fecha real se pregunta si se queire contar hasta la fecha actual o tomar un fecha tope
-            ava = Error("\n\t1) Bucar con fecha Actual\n\n\t2) Ingresar otra fecha")
+            ava = Error("\n\t1) Buscar con fecha Actual\n\n\t2) Ingresar otra fecha")
             while ava > 2 or ava < 0:#si se quiere con la fecha actual se realiza la funcion busqueda
                 ava = Error(("\n"*224)+"\nValor fuera del rango\n\n\n\t1) Bucar con fecha Actual\n\n\t2) Ingresar otra fecha")
             if ava == 1:#si se desa con otra fecha se busca otra funcion
                 ava = True
                 while ava == True:# en caso de ser con la fecha actual se hace con la fecha actual la funcion bsuqueda
-                    ava = busqueda(year_1,month_1,day_1,directorio,muni_est_val,Error)
+                    ava = busqueda(year_1,month_1,day_1,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est)
                 ava = True
                 print ("\n"*224)
             elif ava == 2:
@@ -559,7 +524,7 @@ def visua_visi(directorio,Error):
                     day_2,month_2,year_2 = ingreso_fecha(Error)#se asegura que la fecha sea en el futuro de la fecha deseada
                 ava = True
                 while ava == True:#si se tienen amabsa fechas se hace las busqueda
-                    ava = busqueda_2(year_1,month_1,day_1,year_2,month_2,day_2,directorio,muni_est_val,Error)#funcion busqueda_2
+                    ava = busqueda_2(year_1,month_1,day_1,year_2,month_2,day_2,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est)#funcion busqueda_2
                 ava = True
                 print ("\n"*224)
     return ava#se retorna ava segun como halla quedado

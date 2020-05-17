@@ -1,7 +1,0 @@
-1,Universidad San Buenaventura
-3,I.E. Concejo Municipal de Itagüí
-5,E.U. Joaquín Aristizabal
-7,Hospital medico central
-10,Torre Social
-5,Parque principal
-8,Centro de Acopio

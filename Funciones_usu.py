@@ -52,3 +52,10 @@ def verifi_usu(dic_usuarios,Error):
             ava = True#sale del ciclo while
             tipo = ""#para darle un valor a tipo que no se usara
     return conti,tipo#retorna un valor booleno y un tipo de dato
+"""
+from Funciones_ini import Error 
+from Funciones_arh import dic_usu
+arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
+dic_usuarios = dic_usu(arh)
+verifi_usu(dic_usuarios,Error)
+"""
