@@ -4,7 +4,7 @@
 <1231231233;Juan Carlos Sierra;123123;Administrador>
 <3254235434;Sebastián Isaza;77777;Administrador>
 <1007655560;Juan Gualteros;2412;Administrador>
-<1011121314;Alejandro Fonseca;1224;Operador>
+<1011121314;Alejandro Fonseca;2412;Operador>
 <1007612981;Jose Andres Poveda;3465;Operador>
 <1090101090;Jose Andres;3450;Administrador>
 

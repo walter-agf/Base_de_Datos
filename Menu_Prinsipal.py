@@ -25,6 +25,12 @@ while ava == False:
     if ava == 1:#en caso de que sea ususario registrado
         ava,tipo = verifi_usu(dic_usuarios,Error)#averigua si el codigo de usuario esta
         if ava == True:#en caso de que el usuario alla sido validado
+            arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
+            dic_usuarios = dic_usu(arh)
+            dic_municipios,lista_municipios = dic_1(arh)
+            dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+            est = dic_3(arh,est)
+            arh.close()
             ava = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save) #realice la funcion correspondiente al usuario
             print ("\n"*224)
             presentacion()#imprime la presentacion del programa
