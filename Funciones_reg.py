@@ -374,18 +374,18 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                             elif esta == 2:
                                 ava = True
                             elif esta == 1:
-                                ava = 0
+                                esta = 0
                                 print ("\n"*224)
-                                while ava == 0:
+                                while esta == 0:
                                     for i in dic_muni[muni][1].keys():
                                         print ("\n",i,"--> ",dic_muni[muni][1][i][0])
-                                    ava = Error("")
-                                    if ava > i + 1 or ava <= 0:
+                                    esta = Error("")
+                                    if esta > i + 1 or esta <= 0:
                                         print ("\n"*224)
                                         print ("\n\nValor fuera de rango")
-                                        ava = 0
+                                        esta = 0
                                     else:
-                                        ubi = ava
+                                        ubi = esta
                                         print ("\n"*224)
                                         ava = 0
                                         while ava == 0:
@@ -426,16 +426,16 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                         st = st[pos+1:]
                                                     print (i,"    ",lista)
                                                 print ("\n\n\nDesea volver al menu anterior")
-                                                ava = 0
-                                                while ava == 0:
+                                                ava = 24
+                                                while ava == 24:
                                                     ava = Error("\n\n\nPresiona [ 0 ] para volver al menu anterior")
                                                     if ava == 0:
                                                         print ("\n"*224)
-                                                        ava = 1
+                                                        ava = 0
                                                     else:
                                                         print ("\n"*224)
                                                         print ("Valor fuera del rango\n\n")
-                                                        ava = 0
+                                                        ava = 24
                                             elif ava == 2:
                                                 while ava == 2:
                                                     print ("\n\n Para el municipio de ",dic_muni[muni][0].upper()," para la estacion de ",dic_muni[muni][1][esta][0].upper(),"\n\n")
@@ -485,24 +485,22 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                         if dic_est[i] == st:
                                                             estac = i
                                                     est[estac][now]= ("{"+pm10+","+pm25+","+tem+","+hum+"}")
-                                                    ava = 0
+                                                    ava = 24
                                                     dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                                                     print ("\n"*224)
-                                                    while ava == 0:
+                                                    while ava == 24:
                                                         ava = Error("Que desea hacer\n\n\t1) Volver al menu anterior\n\n\t2) Ingresar otra medida")
                                                         if ava > 2 or ava <= 0:
                                                             print ("\n"*224)
                                                             print ("Valor fuera del rango\n\n")
+                                                            ava = 24
+                                                        elif ava == 1:
                                                             ava = 0
                                                     print ("\n"*224)
-                                                    if ava == 2:
-                                                        ava = 2
                                             elif ava == 3:
-                                                ava = 2
-                                            if ava == 1:
-                                                ava = 0
-                                if ava == 2:
-                                    ava = 0
+                                                ava = 1
+                                        if ava == 1:
+                                            ava = 0
         else:
             print ("\n\nValor fuera del rango\n\n")
     return ava

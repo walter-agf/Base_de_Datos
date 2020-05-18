@@ -31,7 +31,13 @@ while ava == False:
         else:
             print ("\n"*224)
             presentacion()#imprime la presentacion del programa
-    elif ava == 2:#en caso de que sea un visitante
+    elif ava == 2:#en caso de que sea un visitante        
+        arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
+        dic_usuarios = dic_usu(arh)
+        dic_municipios,lista_municipios = dic_1(arh)
+        dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+        est = dic_3(arh,est)
+        arh.close()
         ava = visua_visi(dic_municipios,dic_muni,est,dic_est,Error)#imprima la infromacion que solicita el visitante
         print ("\n"*224)
         presentacion()#imprime la presentacion del programa
