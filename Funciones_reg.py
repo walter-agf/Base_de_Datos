@@ -1,8 +1,18 @@
 import datetime
-from Funciones_ini import Error,visua_visi # Vasiables de uso en bsuqueda
-from Funciones_usu import verifi_usu #Variable de verificaion de usuario
-from Funciones_reg import registrado,Error_float #Variables que operan con el registro
-from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
+#from Funciones_save import save
+#from Funciones_ini import Error#,visua_visi # Vasiables de uso en bsuqueda
+#from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
+#arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
+#dic_usuarios = dic_usu(arh)
+#dic_municipios,lista_municipios = dic_1(arh)
+#print (dic_municipios)
+#print (lista_municipios)
+#dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+#print (dic_muni)
+#print (dic_est)
+#est = dic_3(arh,est)
+#print (est)
+#arh.close()
 def Error_float(tex):
     """
 
@@ -30,7 +40,7 @@ def Error_float(tex):
         except ValueError:#en caso de ser incorrecto sige con el programa hasta que sea correcto imprimiendo un mensaje de valor incorrecto
             print (("\n"*224)+"Valor Incorrecto reingrese")
     return y#retorna el valro entero
-def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est):
+def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save):
     ava = True
     while ava == True:
         if tipo == "Administrador":
@@ -54,7 +64,6 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                             print ("Valor inconcluso Reingrese\n\n")
                             avanzar = 0
                     if avanzar == 1:
-                        dic_municipios = dic_1(directorio)
                         print ("\n\n")
                         muni = 0
                         while muni == 0:
@@ -69,22 +78,22 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 print ("Valor fuera del rango\n")
                                 muni  = 0
                         print ("\n"*224)
-                        dic_municipios = dic_2(directorio,dic_municipios)
-                        if len(dic_municipios[muni][1]) == 0:
-                            print ("El municipio ",dic_municipios[muni][0].upper(),"No tiene estaciones registradas")
+                        if len(dic_muni[muni][1]) == 0:
+                            print ("El municipio ",dic_muni[muni][0].upper(),"No tiene estaciones registradas")
                             i = 0
                         else:
-                            for i in dic_municipios[muni][1]:
-                                print (i," --> ",dic_municipios[muni][1][i][0])
+                            for i in dic_muni[muni][1]:
+                                print (i," --> ",dic_muni[muni][1][i][0])
                         print ("\n\n\nIngrese el nombre de la nueva estacion")
                         i = i + 1
                         esta = input("---> ")
-                        x = open(directorio+"/estaciones.txt","a")
-                        st = str(muni)
-                        st = (st+","+esta+"\n")
-                        #print (x.read())
-                        x.write(st)
-                        x.close()
+                        nume = int(max(dic_est))
+                        nume = str(nume + 1)
+                        st = dic_municipios[muni][0]
+                        st = (esta+","+st)
+                        dic_est[nume] = st
+                        #print (dic_est)
+                        dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                         print ("\n\n\n\n\n\nYa fue agregada la nueva estacion")
                         print ("Recuerda que se agrega en la ultima posicon de estacion disponible para el municipio")
                         ava = False
@@ -95,7 +104,6 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                             else:
                                 ava = True
                     elif avanzar == 2 :
-                        dic_municipios = dic_1(directorio)
                         print ("\n\n")
                         muni = 0
                         while muni == 0:
@@ -110,13 +118,12 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 print ("Valor fuera del rango\n")
                                 muni  = 0
                         print ("\n"*224)
-                        dic_municipios = dic_2(directorio,dic_municipios)
-                        if len(dic_municipios[muni][1]) == 0:
-                            print ("El municipio ",dic_municipios[muni][0].upper(),"No tiene estaciones registradas")
+                        if len(dic_muni[muni][1]) == 0:
+                            print ("El municipio ",dic_muni[muni][0].upper(),"No tiene estaciones registradas")
                             i = 0
                         else:
-                            for i in dic_municipios[muni][1]:
-                                print (i," --> ",dic_municipios[muni][1][i][0])
+                            for i in dic_muni[muni][1]:
+                                print (i," --> ",dic_muni[muni][1][i][0])
                             esta = 0
                             while esta == 0:
                                 esta = Error("\n\nSeleccione la estacion a editar")
@@ -124,37 +131,21 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                     print ("Valor fuera del rango Reingresar")
                                     esta = 0
                             print ("\n\nPara la estacion ",end = "\t")
-                            print (dic_municipios[muni][1][esta][0].upper())
+                            print (dic_muni[muni][1][esta][0].upper())
                             print ("\n\nComo desea renombrar la estacion ? ")
                             name = input(" --> ")
-                            name = (name+"\n")
-                            x = open(directorio+"/estaciones.txt","r")
-                            lis = x.readlines()
-                            for a in range (len(lis)):
-                                lis[a] = lis[a][:-1]
-                            x.close()
-                            w = open(directorio+"/estaciones.txt","w")
-                            w.close()
-                            s = open(directorio+"/estaciones.txt","a")
-                            for i in lis:
-                                pos = i.find(",")
-                                mu = i[:pos]
-                                a = i
-                                a = (a+"\n")
-                                i = i[pos+1:]
-                                if int(mu) == muni:
-                                    if i == dic_municipios[muni][1][esta][0]:
-                                       name = (mu+","+name)
-                                       s.write(name)
-                                    else:
-                                       s.write(a)
-                                else:
-                                    s.write(a)                        
-                            s.close()
+                            st = dic_municipios[muni][0]
+                            estacion = dic_muni[muni][1][esta][0]
+                            name = (name+","+st)
+                            st = (estacion+","+st)
+                            for i in dic_est:
+                                if dic_est[i] == st:
+                                    esta = i
+                            dic_est[esta] = name
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                             print ("\n"*224)
                             print ("Edicion completada\n\n")
                     elif avanzar == 3 :
-                        dic_municipios = dic_1(directorio)
                         print ("\n\n")
                         muni = 0
                         while muni == 0:
@@ -169,44 +160,46 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 print ("Valor fuera del rango\n")
                                 muni  = 0
                         print ("\n"*224)
-                        dic_municipios = dic_2(directorio,dic_municipios)
-                        if len(dic_municipios[muni][1]) == 0:
-                            print ("El municipio ",dic_municipios[muni][0].upper(),"No tiene estaciones registradas")
+                        if len(dic_muni[muni][1]) == 0:
+                            print ("El municipio ",dic_muni[muni][0].upper(),"No tiene estaciones registradas")
                             i = 0
                         else:
-                            for i in dic_municipios[muni][1]:
-                                print (i," --> ",dic_municipios[muni][1][i][0])
+                            for i in dic_muni[muni][1]:
+                                print (i," --> ",dic_muni[muni][1][i][0])
                             esta = 0
                             while esta == 0:
                                 esta = Error("\n\nSeleccione la estacion a Eliminar")
                                 if esta > i or esta <= 0:
                                     print ("Valor fuera del rango Reingresar")
                                     esta = 0
-                            x = open(directorio+"/estaciones.txt","r")
-                            lis = x.readlines()
-                            for a in range (len(lis)):
-                                lis[a] = lis[a][:-1]
-                            x.close()
-                            w = open(directorio+"/estaciones.txt","w")
-                            w.close()
-                            s = open(directorio+"/estaciones.txt","a")
-                            for i in lis:
-                                pos = i.find(",")
-                                mu = i[:pos]
-                                a = i
-                                i = i+"\n"
-                                if int(mu) == muni:
-                                    pos = i.find(",")
-                                    a = a[pos+1:]
-                                    if a == dic_municipios[muni][1][esta][0]:
-                                        print ("")
-                                    else:
-                                       s.write(i)
-                                else:
-                                    s.write(i)                        
-                            s.close()
-                            print ("\n"*224)
-                            print ("Edicion completada\n\n")
+                            st = dic_municipios[muni][0]
+                            estacion = dic_muni[muni][1][esta][0]
+                            st = (estacion+","+st)
+                            for i in dic_est:
+                                if dic_est[i] == st:
+                                    esta = i
+                            if len(est[esta]) != 0:
+                                seguir = 0
+                                while seguir == 0:
+                                    seguir = Error("\n\nValriable llena desea eliminar contenido\n\n\n\t1) SI\n\n\t2) NO")
+                                    if seguir > 2 or seguir <= 0:
+                                        print ("Valor fuera del rango Reingresar")
+                                        seguir = 0
+                                if seguir == 1:
+                                    del est[esta]
+                                    del dic_est[esta]
+                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                                    print ("\n"*224)
+                                    print ("Edicion completada\n\n")
+                                elif seguir == 2:
+                                    print ("\n"*224)
+                                    print ("Edicion NO realizada\n\n")
+                            else:
+                                del est[esta]
+                                del dic_est[esta]
+                                dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                                print ("\n"*224)
+                                print ("Edicion completada\n\n")
                 elif conti == 2 :
                     while ava == True:
                         avanzar = 0
@@ -218,7 +211,6 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 print ("Valor inconcluso Reingrese\n\n")
                                 avanzar = 0
                         if avanzar == 1:
-                            dic_usuarios = dic_usu(directorio)
                             print ("\n\n")
                             for i in dic_usuarios.keys():
                                 print (i," --> ",dic_usuarios[i][0])
@@ -255,9 +247,17 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 ti = "Operador"
                             lis = (lis+ti)
                             lis = (lis+"\n")
-                            x = open(directorio+"/usuarios.txt","a")
-                            x.write(lis)
-                            x.close()
+                            lista = []
+                            pos = lis.find(",")
+                            clave = lis[:pos]
+                            lis = lis[pos+1:]
+                            for h in range (3):
+                                pos = lis.find(",")
+                                lista.append(lis[:pos])
+                                lis = lis[pos+1:]
+                            dic_usuarios[clave] = lista
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                            #print (dic_usuarios)
                             print ("\n\n\n\n\n\nYa fue agregado el nuevo usuario")
                             ava = False
                             while ava != True: 
@@ -267,7 +267,6 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 else:
                                     ava = True   
                         elif avanzar == 2:
-                            dic_usuarios = dic_usu(directorio)
                             print ("\n\n")
                             for i in dic_usuarios.keys():
                                 print (i," --> ",dic_usuarios[i][0])
@@ -281,69 +280,52 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 else:
                                     print ("\n\n\nDocumento NO esta en la base de datos")
                                     doc = "1"
-                            x = open(directorio+"/usuarios.txt","r")
-                            lis = x.readlines()
-                            for a in range (len(lis)):
-                                lis[a] = lis[a][:-1]
-                            x.close()
-                            w = open(directorio+"/usuarios.txt","w")
-                            w.close()
-                            s = open(directorio+"/usuarios.txt","a")
-                            for i in lis:
-                                pos = i.find(",")
-                                do = i[:pos]
-                                a = i
-                                a = (a+"\n")
-                                i = i[pos+1:]
-                                if do == doc:
-                                    pos = i.find(",")
-                                    name = i[:pos]
-                                    i = i[pos+1:]
-                                    pos = i.find(",")
-                                    pas = i[:pos]
-                                    tip = i[pos+1:]
+                            dato = dic_usuarios[doc]
+                            name = dato[0]
+                            pas = dato[1]
+                            tip = dato[2]
+                            edi = 0
+                            while edi == 0:
+                                edi = Error("\n\n\nQue desea editar ?\n\n\t1) El nombre\n\n\t2) La contraseña\n\n\t3) El tipo de usuario")
+                                if edi > 3 or edi <= 0:
+                                    print ("\n\nValor inconcluso Reintente")
                                     edi = 0
-                                    while edi == 0:
-                                        edi = Error("\n\n\nQue desea editar ?\n\n\t1) El nombre\n\n\t2) La contraseña\n\n\t3) El tipo de usuario")
-                                        if edi > 3 or edi <= 0:
-                                            print ("\n\nValor inconcluso Reintente")
-                                        elif edi == 1:
-                                            print ("\n\nEditar nombre  ",name.upper())
-                                            print ("\n\nIngrese nuevo Nombre")
-                                            name = input(" --> ")
-                                        elif edi == 2:
-                                            for a in range (4):
-                                                print ("Ingrese la contraseña, tiene 4 intentos")
-                                                con = input(" -- >")
-                                                if con == pas:
-                                                    print ("\n\nEdita contraseña  ",pas.upper())
-                                                    print ("\n\nIngrese nueva Contraseña")
-                                                    pas = input(" --> ")
-                                                    break
-                                                else:
-                                                    print ("\n\nReingrese")
-                                        elif edi == 3:
-                                            print ("\n\nEdita tipo de Usuario  ",tip.upper())
-                                            ti = 3
-                                            while ti != 1 and ti != 2:
-                                                ti = Error("Seleccione el tipo de usuario\n\n\n\t1) Administrador\n\n\t2) Operador")
-                                                if ti != 1 and ti != 2:
-                                                    print ("\n"*224)
-                                                    print ("Valor invalido reintentar")
-                                            if ti == 1:
-                                                tip = "Administrador"
-                                            elif ti == 2:
-                                                tip = "Operador"
-                                    a =(doc+","+name+","+pas+","+tip+"\n")
-                                    s.write(a)
-                                else:
-                                    s.write(a)                        
-                            s.close()
+                                elif edi == 1:
+                                    print ("\n\nEditar nombre  ",name.upper())
+                                    print ("\n\nIngrese nuevo Nombre")
+                                    name = input(" --> ")
+                                    dato[0] = name
+                                elif edi == 2:
+                                    for a in range (4):
+                                        print ("Ingrese la contraseña, tiene 4 intentos")
+                                        con = input(" -- >")
+                                        if con == pas:
+                                            print ("\n\nEdita contraseña  ",pas.upper())
+                                            print ("\n\nIngrese nueva Contraseña")
+                                            pas = input(" --> ")
+                                            dato[1] = pas
+                                            break
+                                        else:
+                                            print ("\n\nReingrese")
+                                elif edi == 3:
+                                    print ("\n\nEdita tipo de Usuario  ",tip.upper())
+                                    ti = 3
+                                    while ti != 1 and ti != 2:
+                                        ti = Error("Seleccione el tipo de usuario\n\n\n\t1) Administrador\n\n\t2) Operador")
+                                        if ti != 1 and ti != 2:
+                                            print ("\n"*224)
+                                            print ("Valor invalido reintentar")
+                                    if ti == 1:
+                                        tip = "Administrador"
+                                    elif ti == 2:
+                                        tip = "Operador"
+                                    dato[2] = tip
+                            dic_usuarios[doc] = dato 
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                             print ("\n"*224)
                             print ("Edicion completada\n\n")
                             ava = False
                         elif avanzar == 3:
-                            dic_usuarios = dic_usu(directorio)
                             print ("\n\n")
                             for i in dic_usuarios.keys():
                                 print (i," --> ",dic_usuarios[i][0])
@@ -357,21 +339,8 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 else:
                                     print ("\n\n\nDocumento NO esta en la base de datos")
                                     doc = "1"
-                            x = open(directorio+"/usuarios.txt","r")
-                            lis = x.readlines()
-                            for a in range (len(lis)):
-                                lis[a] = lis[a][:-1]
-                            x.close()
-                            w = open(directorio+"/usuarios.txt","w")
-                            w.close()
-                            s = open(directorio+"/usuarios.txt","a")
-                            for i in lis:
-                                pos = i.find(",")
-                                do = i[:pos]
-                                i = (i+"\n")
-                                if do != doc:
-                                    s.write(i)                        
-                            s.close()
+                            del dic_usuarios[doc]       
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                             print ("\n"*224)
                             print ("Edicion completada\n\n")
                             ava = False
@@ -379,7 +348,6 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
         elif tipo == "Operador":
             ava = True
             while ava == True:
-                dic_municipios = dic_1(directorio)
                 for i in dic_municipios.keys():
                     if i < 10 :
                         print (i," => ",dic_municipios[i][0])
@@ -389,17 +357,16 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                 if muni == 0:
                     ava = False
                 elif muni < i+1:
-                    dic_municipios = dic_2(directorio, dic_municipios)
-                    if len(dic_municipios[muni][1]) == 0:
+                    if len(dic_muni[muni][1]) == 0:
                         print ("\n"*224)
-                        print ("\n\n▓▓▓▓▓ El municipio de "+dic_municipios[muni][0].upper()+" NO tiene estaciones registradas ▓▓▓▓▓\n\n")
+                        print ("\n\n▓▓▓▓▓ El municipio de "+dic_muni[muni][0].upper()+" NO tiene estaciones registradas ▓▓▓▓▓\n\n")
                         print ("Reingrese el municipio\n")
                     else:
                         ava = 0 
                         while ava == 0:
-                            print ("\n\nEl municipio de "+dic_municipios[muni][0].upper()+" tiene las siguientes estaciones :")
-                            for i in dic_municipios[muni][1].keys():
-                                print ("\n",i,"--> ",dic_municipios[muni][1][i][0])
+                            print ("\n\nEl municipio de "+dic_muni[muni][0].upper()+" tiene las siguientes estaciones :")
+                            for i in dic_muni[muni][1].keys():
+                                print ("\n",i,"--> ",dic_muni[muni][1][i][0])
                             esta = Error(("\n\n\t1) Escoger estacion\n\n\t2) Volver a escoger municipio"))
                             if esta > 2 or esta <= 0:
                                 print ("\n"*224)
@@ -410,14 +377,15 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 ava = 0
                                 print ("\n"*224)
                                 while ava == 0:
-                                    for i in dic_municipios[muni][1].keys():
-                                        print ("\n",i,"--> ",dic_municipios[muni][1][i][0])
+                                    for i in dic_muni[muni][1].keys():
+                                        print ("\n",i,"--> ",dic_muni[muni][1][i][0])
                                     ava = Error("")
                                     if ava > i + 1 or ava <= 0:
                                         print ("\n"*224)
                                         print ("\n\nValor fuera de rango")
                                         ava = 0
                                     else:
+                                        ubi = ava
                                         print ("\n"*224)
                                         ava = 0
                                         while ava == 0:
@@ -427,7 +395,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                 print ("\n\nValor fuera del rango")
                                                 ava = 0
                                             elif ava == 1:
-                                                print ("\n\n La informacion es del municipio de ",dic_municipios[muni][0].upper()," para la estacion de ",dic_municipios[muni][1][esta][0].upper(),"\n\n")
+                                                print ("\n\n La informacion es del municipio de ",dic_muni[muni][0].upper()," para la estacion de ",dic_muni[muni][1][esta][0].upper(),"\n\n")
                                                 texto = ["   PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
                                                 tex = ["   μg/m³","μg/m³"," °C ","  %   "]
                                                 imp = ""
@@ -442,27 +410,21 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                     sep = sep+tex[i-1]+"  " 
                                                 print ("                      "+imp)
                                                 print ("                      "+sep,end="\n\n")
-                                                x = open(directorio+"/ingreso.txt","r")
-                                                for i in x:
-                                                    pos = i.find(",")
-                                                    m = int(i[:pos])
-                                                    if muni == m:
-                                                        i = i[pos+1:]
-                                                        pos = i.find(";")
-                                                        m = int(i[:pos])
-                                                        if esta == m:
-                                                            i = i[pos+1:]
-                                                            pos = i.find(",")
-                                                            a = i[pos+1:]
-                                                            a = a[1:-1]
-                                                            lista = []
-                                                            for s in range(4):
-                                                                ubi = a.find(",")
-                                                                val = float(a[:ubi])
-                                                                lista.append(val)
-                                                                a = a[ubi+1:]
-                                                            print (i[:pos],"    ",lista)
-                                                x.close()
+                                                st = dic_municipios[muni][0]
+                                                estacion = dic_muni[muni][1][ubi][0]
+                                                st = (estacion+","+st)
+                                                for i in dic_est:
+                                                    if dic_est[i] == st:
+                                                        estac = i
+                                                for i in est[estac]:
+                                                    st = est[estac][i]
+                                                    st = st[1:-1]
+                                                    lista = []
+                                                    for h in range (4):
+                                                        pos = st.find(",")
+                                                        lista.append(float(st[:pos]))
+                                                        st = st[pos+1:]
+                                                    print (i,"    ",lista)
                                                 print ("\n\n\nDesea volver al menu anterior")
                                                 ava = 0
                                                 while ava == 0:
@@ -475,9 +437,8 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                         print ("Valor fuera del rango\n\n")
                                                         ava = 0
                                             elif ava == 2:
-                                                while ava == 2: 
-                                                    x = open(directorio+"/ingreso.txt","a")
-                                                    print ("\n\n Para el municipio de ",dic_municipios[muni][0].upper()," para la estacion de ",dic_municipios[muni][1][esta][0].upper(),"\n\n")
+                                                while ava == 2:
+                                                    print ("\n\n Para el municipio de ",dic_muni[muni][0].upper()," para la estacion de ",dic_muni[muni][1][esta][0].upper(),"\n\n")
                                                     now = datetime.datetime.now()
                                                     now = now.strftime("%Y-%m-%d %T")
                                                     print ("Con un codigo que es la siguiente fecha y hora = ",now)
@@ -517,16 +478,15 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                             print ("\n"*224)
                                                             print ("Valor fuera del rango\n")
                                                     hum = str(hum)
-                                                    mun = str(muni)
-                                                    es = str(esta)
-                                                    s = str(mun+","+es)
-                                                    p = str(";"+now)
-                                                    w = str(",["+pm10+","+pm25+","+tem+","+hum+"]\n")
-                                                    g = (s+p+w)
-                                                    print (g)
-                                                    x.write(g)
-                                                    x.close()
+                                                    st = dic_municipios[muni][0]
+                                                    estacion = dic_muni[muni][1][ubi][0]
+                                                    st = (estacion+","+st)
+                                                    for i in dic_est:
+                                                        if dic_est[i] == st:
+                                                            estac = i
+                                                    est[estac][now]= ("{"+pm10+","+pm25+","+tem+","+hum+"}")
                                                     ava = 0
+                                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
                                                     print ("\n"*224)
                                                     while ava == 0:
                                                         ava = Error("Que desea hacer\n\n\t1) Volver al menu anterior\n\n\t2) Ingresar otra medida")
@@ -535,15 +495,16 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                             print ("Valor fuera del rango\n\n")
                                                             ava = 0
                                                     print ("\n"*224)
+                                                    if ava == 2:
+                                                        ava = 2
                                             elif ava == 3:
                                                 ava = 2
                                             if ava == 1:
                                                 ava = 0
                                 if ava == 2:
                                     ava = 0
-
         else:
             print ("\n\nValor fuera del rango\n\n")
     return ava
-#tipo =  "Administrador"
-#s  = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est)
+#tipo =  "Operador"
+#s  = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save)

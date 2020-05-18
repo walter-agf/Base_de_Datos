@@ -326,20 +326,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
         #print (estac)
         for i in est.keys():
             if i in estac:
-                print ("\n",dic_est[i].upper(),"\n")
-                texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-                tex = ["μg/m³","μg/m³"," °C ","  %   "]
-                imp = ""
-                sep = ""
-                for d in val:
-                    """
-                    for que se repite para agregar un menu de texto que nos diga cuales 
-                    variable estamos analindo
-                    """
-                    imp = imp+texto[d-1]+" "
-                    sep = sep+tex[d-1]+"  " 
-                print ("                      "+imp)
-                print ("                      "+sep,end="\n\n")
+                dest = 0
                 for a in est[i]:
                     name = a
                     pos = name.find("-")
@@ -358,6 +345,22 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                             if año == year and mes == month and dia < day:#conpara si dicho dia fue antes o depues de loa analizado
                                 print (end ="")
                             else:#en caso de que dicho dia sea despues de lo analizado
+                                if dest == 0:
+                                    print ("\n",dic_est[i].upper(),"\n")
+                                    texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
+                                    tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                                    imp = ""
+                                    sep = ""
+                                    for d in val:
+                                        """
+                                        for que se repite para agregar un menu de texto que nos diga cuales 
+                                        variable estamos analindo
+                                        """
+                                        imp = imp+texto[d-1]+" "
+                                        sep = sep+tex[d-1]+"  " 
+                                    print ("                      "+imp)
+                                    print ("                      "+sep,end="\n\n")
+                                    dest = 1
                                 info = est[i][a]
                                 info = info[1:-1]
                                 lis = {}#crea el diccionario en lis para su analizis de valores
@@ -404,20 +407,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
         #print (estac)
         for i in est.keys():
             if i in estac:
-                print ("\n",dic_est[i].upper(),"\n")
-                texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-                tex = ["μg/m³","μg/m³"," °C ","  %   "]
-                imp = ""
-                sep = ""
-                for d in val:
-                    """
-                    for que se repite para agregar un menu de texto que nos diga cuales 
-                    variable estamos analindo
-                    """
-                    imp = imp+texto[d-1]+" "
-                    sep = sep+tex[d-1]+"  " 
-                print ("                      "+imp)
-                print ("                      "+sep,end="\n\n")
+                dest = 0
                 for a in est[i]:
                     name = a
                     pos = name.find("-")
@@ -436,6 +426,22 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                             if año == year_1 and mes == month_1 and dia < day_1 or año == year_2 and mes == month_2 and dia > day_1:#conpara si dicho dia fue antes o depues de loa analizado
                                 print (end ="")
                             else:#en caso de que dicho dia sea despues de lo analizado
+                                if dest == 0:
+                                    print ("\n",dic_est[i].upper(),"\n")
+                                    texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
+                                    tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                                    imp = ""
+                                    sep = ""
+                                    for d in val:
+                                        """
+                                        for que se repite para agregar un menu de texto que nos diga cuales 
+                                        variable estamos analindo
+                                        """
+                                        imp = imp+texto[d-1]+" "
+                                        sep = sep+tex[d-1]+"  " 
+                                    print ("                      "+imp)
+                                    print ("                      "+sep,end="\n\n")
+                                    dest = 1
                                 info = est[i][a]
                                 info = info[1:-1]
                                 lis = {}#crea el diccionario en lis para su analizis de valores

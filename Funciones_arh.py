@@ -2,7 +2,7 @@ def dic_usu(arh):
     x = arh.readline()
     lis = []
     while x != "\n":
-        x = x[1:-2]
+        x = x[1:-1]
         lis.append(x)
         x = arh.readline()
     #print (lis)
@@ -72,8 +72,10 @@ def dic_2(arh,dic_municipios):
     las estaciones y su respectivo orden, por lo que crea un diccionario
     respetano el orden de los municipios y el avance del mismo
     """
-    for i in dic_municipios:
-        dic_municipios[i].append({})
+    diccio = dic_municipios.copy()
+    for i in diccio:
+        diccio[i] = diccio[i].copy()
+        diccio[i].append({})
     arh.readline()
     lista_estaciones = arh.readline()#Crea una lista con la cantidad de estaciones y sus repectiva ubicacion    
     lis = []
@@ -94,14 +96,14 @@ def dic_2(arh,dic_municipios):
         pos = i.find(",")
         name = i[:pos]
         city = i[pos+1:]
-        for a in dic_municipios.keys():
-            if dic_municipios[a][0] == city:
-                can = len(dic_municipios[a][1])
+        for a in diccio.keys():
+            if diccio[a][0] == city:
+                can = len(diccio[a][1])
                 sa = []
                 sa.append(name)
                 sa.append({})
-                dic_municipios[a][1][can+1] = sa 
-    return dic_municipios,est,dic_est#Retorna el nuevo diccionario que es en realidad el original mutado
+                diccio[a][1][can+1] = sa 
+    return diccio,est,dic_est#Retorna el nuevo diccionario que es en realidad el original mutado
 #dic_municipios_2 = dic_2(dic_municipios)
 #print ("\n",dic_municipios_2)
 def dic_3(arh,est):
