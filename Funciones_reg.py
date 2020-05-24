@@ -91,15 +91,18 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                 if conti == 3: #En caso de que el usuario queira salir
                     ava = False
                 elif conti == 1 :#En caso de que administrador queira trabajar ocn la informacion de las estaciones
-                    avanzar = 0
+                    avanzar = 24
                     print ("\n"*224)
-                    while avanzar == 0:#se repite hasta que el adminsitrador indique exactamente que accion desea realizar
-                        avanzar = Error("¿ Que accion desea hacer ?\n\n\n\t1) Crear estacion\n\n\t2) Editar estacion\n\n\t3) Eliminar estacion")
-                        if avanzar > 3 or avanzar <= 0:
+                    while avanzar == 24:#se repite hasta que el adminsitrador indique exactamente que accion desea realizar
+                        avanzar = Error("¿ Que accion desea hacer ?\n\n\n\t1) Crear estacion\n\n\t2) Editar estacion\n\n\t3) Eliminar estacion\n\n\n[ 0 ] Volver al menu anterior")
+                        if avanzar > 3 or avanzar < 0:
                             print ("\n"*224)
                             print ("Valor inconcluso Reingrese\n\n")
-                            avanzar = 0
-                    if avanzar == 1:#en caso de de que lo que dese hacer es la creacion de una nueva estacion
+                            avanzar = 24
+                    if avanzar == 0:
+                        ava =  True
+                        print ("\n"*224)
+                    elif avanzar == 1:#en caso de de que lo que dese hacer es la creacion de una nueva estacion
                         print ("\n\n")
                         muni = 0
                         while muni == 0:#se muestras los municipios para su ingreso
@@ -239,15 +242,18 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 print ("Edicion completada\n\n")
                 elif conti == 2 : # En caso de que se quiera trabajar ocn los usuarios
                     while ava == True:
-                        avanzar = 0
+                        avanzar = 24
                         print ("\n"*224)
-                        while avanzar == 0:#infroma de manera logica la accion que desea realizar el usuario
-                            avanzar = Error("¿ Que accion desea hacer ?\n\n\n\t1) Crear Usuario\n\n\t2) Editar Usuario\n\n\t3) Eliminar Usuario")
-                            if avanzar > 3 or avanzar <= 0:
+                        while avanzar == 24:#infroma de manera logica la accion que desea realizar el usuario
+                            avanzar = Error("¿ Que accion desea hacer ?\n\n\n\t1) Crear Usuario\n\n\t2) Editar Usuario\n\n\t3) Eliminar Usuario\n\n\n[ 0 ] Volver al Menu anterior")
+                            if avanzar > 3 or avanzar < 0:
                                 print ("\n"*224)
                                 print ("Valor inconcluso Reingrese\n\n")
-                                avanzar = 0
-                        if avanzar == 1:# en caso de que administrador queira crear un nuemvo usuario
+                                avanzar = 24
+                        if avanzar == 0:
+                            ava  = False
+                            print ("\n"*224)
+                        elif avanzar == 1:# en caso de que administrador queira crear un nuemvo usuario
                             print ("\n\n")
                             for i in dic_usuarios.keys():# imprime los documentos y los nombres de los usuarios
                                 print (i," --> ",dic_usuarios[i][0])
