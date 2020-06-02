@@ -1,7 +1,7 @@
 from Funciones_ini import presentacion,Error,visua_visi # Vasiables de uso en bsuqueda
 from Funciones_usu import verifi_usu #Variable de verificaion de usuario
 from Funciones_reg import registrado,Error_float #Variables que operan con el registro
-from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
+from Funciones_arh import dic_usu,dic_1,dic_2,dic_3,dic_val #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
 from Funciones_save import save
 ava = False # Validaar para iniciar
 arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
@@ -12,6 +12,8 @@ dic_municipios,lista_municipios = dic_1(arh)
 dic_muni,est,dic_est = dic_2(arh,dic_municipios)
 #print (dic_muni)
 #print (dic_est)
+arh,val = dic_val(arh)
+#print ("\n",val,"\n")
 est = dic_3(arh,est)
 #print (est)
 arh.close()
@@ -29,9 +31,10 @@ while ava == False:
             dic_usuarios = dic_usu(arh)
             dic_municipios,lista_municipios = dic_1(arh)
             dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+            arh,val = dic_val(arh)
             est = dic_3(arh,est)
             arh.close()
-            ava = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save) #realice la funcion correspondiente al usuario
+            ava = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,val,save) #realice la funcion correspondiente al usuario
             print ("\n"*224)
             presentacion()#imprime la presentacion del programa
         else:
@@ -42,9 +45,10 @@ while ava == False:
         dic_usuarios = dic_usu(arh)
         dic_municipios,lista_municipios = dic_1(arh)
         dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+        arh,val = dic_val(arh)
         est = dic_3(arh,est)
         arh.close()
-        ava = visua_visi(dic_municipios,dic_muni,est,dic_est,Error)#imprima la infromacion que solicita el visitante
+        ava = visua_visi(dic_municipios,dic_muni,est,dic_est,Error,val)#imprima la infromacion que solicita el visitante
         print ("\n"*224)
         presentacion()#imprime la presentacion del programa
     elif ava == 3:#en caso de no queres contiuar salga

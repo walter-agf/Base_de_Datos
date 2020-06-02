@@ -1,4 +1,4 @@
-from Funciones_arh import dic_usu,dic_1,dic_2,dic_3# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
+from Funciones_arh import dic_usu,dic_1,dic_2,dic_3,dic_val# #importamos de Funciones_dic, dic_usu para creal el direcorio y lo usamos en la verificacion 
 arh = open("Base.txt","r")#busca el documento con nombre de los usuarios
 dic_usuarios = dic_usu(arh)
 dic_municipios,lista_municipios = dic_1(arh)
@@ -8,10 +8,11 @@ dic_muni,est,dic_est = dic_2(arh,dic_municipios)
 #print ("\n",lista_municipios)
 #print ("\n",dic_muni)
 #print ("\n",dic_est)
+arh,val = dic_val(arh)
 est = dic_3(arh,est)
 arh.close()
 #print ("\n",est)
-def save(dic_usuarios,lista_municipios,dic_est,est):
+def save(dic_usuarios,lista_municipios,dic_est,est,val):
     """
     
 
@@ -71,6 +72,13 @@ def save(dic_usuarios,lista_municipios,dic_est,est):
         #print (s)
         x.write(s)
     x.write("\n") #imprime un end line en d el docuemtno para conocer bien la separacion dada
+    for i in val:
+        can = i
+    for i in val:
+        x.write(i+val[i])
+        if i != can:
+            x.write(";")
+    x.write("\n\n")
     #print("\n")
     dic = {}#crea un diccioanrio para poder agregar todos los datos al documetno final
     for i in est:
@@ -81,7 +89,7 @@ def save(dic_usuarios,lista_municipios,dic_est,est):
     for i in dic:
         s = (i+dic[i]+"\n") #Para cada dato ade line se le agrega el docuemtno final
         x.write(s)
-    x.write("\n")
+    #x.write("\n")
     x.close()
     print ("\n")
     #vuelve a importar los valores de la funciones, y da el resultado para volver a crear los datos
@@ -90,10 +98,11 @@ def save(dic_usuarios,lista_municipios,dic_est,est):
     dic_usuarios = dic_usu(arh)
     dic_municipios,lista_municipios = dic_1(arh)
     dic_muni,est,dic_est = dic_2(arh,dic_municipios)
+    arh,val = dic_val(arh)
     est = dic_3(arh,est)
     arh.close()
-    return dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est #retorna los nuevos valores
-#dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+    return dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val #retorna los nuevos valores
+dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
 #print ("\n",dic_usuarios)
 #print ("\n",dic_municipios)
 #print ("\n",lista_municipios)

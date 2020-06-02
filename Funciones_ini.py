@@ -36,7 +36,7 @@ def Error(tex):
         except ValueError:#en caso de ser incorrecto sige con el programa hasta que sea correcto imprimiendo un mensaje de valor incorrecto
             print (("\n"*224)+"Valor Incorrecto reingrese")
     return y#retorna el valro entero
-def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
+def visua_visi(dic_municipios,dic_muni,est,dic_est,Error,val):
     """
     
     Parameters
@@ -83,7 +83,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
 
         """
         day -= d #la cantidad e dias actuales menos los dias predefinidos
-        if day < 1:#si ocurrec un cambio de mes
+        if day < 0:#si ocurrec un cambio de mes
             """
             este if pregunta en que mes fue el cambio para saber a que mes hay 
             que restar y reunbicar cantidad segun la cantidad de dias
@@ -93,6 +93,8 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                 if month == 1:
                     year -= 1
                     month = 12
+                else:
+                    month -= 1
             elif month in [3]:
                 month -= 1
                 """
@@ -161,7 +163,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                     print (("\n"*224)+"Valor imposible, Reingrese")
                     day = Error(tex)
         return day,month,year #retorna los valores dados anteriormete para los nuevos en fecha
-    def muni_est_val(dic_municipios,dic_muni,Error):
+    def muni_est_val(dic_municipios,dic_muni,Error,val):
         """
         
 
@@ -179,7 +181,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
             Una lista de los municipios que usuaurio quiere usar
         est : list
             una lista de las estaciones dependiendo del municipio
-        val : list
+        vari : list
             una lista de los valores que el ususario desea concoer
 
         """
@@ -253,35 +255,48 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
         #print (est)
         print ("Ingrese las varianles que desea medir")
         ava = 0
-        val = [] #Crea la listad de los valores
+        vari = [] #Crea la listad de los valores
         while ava > 2 or ava <= 0:#sea asegura que lo que ingrese el usuario este dentro del valor
             ava = Error("\n¿Desea buscar en ?\n\n\n\t1) Todos las mediciones \n\n\t2) Escoger las mediciones\n\n\n\tRecuerda que si queires ver las medidicones en otro orden\n\tingresa en la opcion dos y da el orden")
             print ("\nValor fuera del rango")
         print ("\n"*224)
         if ava == 1: #Si el usuario quiere usuari todos los valores, los agrega en orne predetermiando 
-            val = [1,2,3,4]
+            can = len(val)
+            for se in range (can):
+                se = se + 1
+                vari.append(se)
         elif ava == 2: #Si el usaurio queires ignresar los valores
             print ("Ingrese las variables que desea buscar")
             print ("Recuerda que orden ingresado orden impreso")
             ava = 0
             while ava == 0:#reite segun la cantidad de valores ingresados
-                ava = Error("\n\t1) PM 10\n\t2) PM 2.5 \n\t3) Temperatura\n\t4) Humedad\n\nTermianr de ingresar [ 0 ]")
-                if ava > 4 or ava < 0:#verifica que el valor este dentro del rango
+                texto = "\n\t"
+                can = 0
+                for se in val:
+                    can = can + 1
+                    f = can
+                    f = str(f)
+                    f = (f+") ")
+                    f = (f+se)
+                    texto = texto + f + "\n\t"
+                texto = texto + "\n\nTermianr de ingresar [ 0 ]"
+                ava = Error(texto)
+                if ava > len(val) or ava < 0:#verifica que el valor este dentro del rango
                     print ("Valor fuera del rango reingrese")
                     ava = 0
                 else:
                     if ava == 0:
                         print ("\n"*224)
                         ava = None
-                    elif len(val) < 4:
-                        val.append(ava)#agrega a val si el valor se puede definir si que se repita no se puede pasar de 4 valores
-                        if len (val) == 4:
+                    elif len(vari) < len(val):
+                        vari.append(ava)#agrega a val si el valor se puede definir si que se repita no se puede pasar de 4 valores
+                        if len (vari) == len(val):
                             ava = None
                         else :
                             ava = 0
                     else:
                         ava = None
-        return muni,est,val#retorna las cuatro lista de valores a analizar
+        return muni,est,vari#retorna las cuatro lista de valores a analizar
     def busqueda(year,month,day,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est):
         """
         Parameters
@@ -310,7 +325,8 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
         continuar : booleano
             si se desea continuar o volver al menu anterior
         """
-        muni,estaciones,val = muni_est_val(dic_municipios,dic_muni,Error)
+        #print (day,month,year)
+        muni,estaciones,vari = muni_est_val(dic_municipios,dic_muni,Error,val)
         pos = 0
         for i in muni:
             muni[pos] = dic_municipios[i][0]
@@ -347,17 +363,27 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                             else:#en caso de que dicho dia sea despues de lo analizado
                                 if dest == 0:
                                     print ("\n",dic_est[i].upper(),"\n")
-                                    texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-                                    tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                                    texto = []
+                                    for se in val:
+                                        if len(se) < 8:
+                                            texto.append(se+"  ")
+                                        else:
+                                            texto.append(se[:7]+"  ")
+                                    tex = []
+                                    for xe in val:
+                                        xe = val[xe]
+                                        po = xe.find(",")
+                                        xe = xe[po+1:-1]
+                                        tex.append(xe+"   ")
                                     imp = ""
                                     sep = ""
-                                    for d in val:
+                                    for d in vari:
                                         """
                                         for que se repite para agregar un menu de texto que nos diga cuales 
                                         variable estamos analindo
                                         """
-                                        imp = imp+texto[d-1]+" "
-                                        sep = sep+tex[d-1]+"  " 
+                                        imp = imp+texto[d-1]
+                                        sep = sep+tex[d-1]
                                     print ("                      "+imp)
                                     print ("                      "+sep,end="\n\n")
                                     dest = 1
@@ -369,7 +395,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                                     lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
                                     info = info[pos+1:]
                                 lista = []
-                                for c in val:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
+                                for c in vari:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
                                     lista.append(float(lis[c]))
                                 """
                                 imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
@@ -391,7 +417,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                 continuar = True
         return continuar
     def busqueda_2(year_1,month_1,day_1,year_2,month_2,day_2,muni_est_val,Error,dic_municipios,dic_muni,est,dic_est):
-        muni,estaciones,val = muni_est_val(dic_municipios,dic_muni,Error)
+        muni,estaciones,vari = muni_est_val(dic_municipios,dic_muni,Error,val)
         pos = 0
         for i in muni:
             muni[pos] = dic_municipios[i][0]
@@ -428,17 +454,27 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                             else:#en caso de que dicho dia sea despues de lo analizado
                                 if dest == 0:
                                     print ("\n",dic_est[i].upper(),"\n")
-                                    texto = ["PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-                                    tex = ["μg/m³","μg/m³"," °C ","  %   "]
+                                    texto = []
+                                    for se in val:
+                                        if len(se) < 8:
+                                            texto.append(se+"  ")
+                                        else:
+                                            texto.append(se[:7]+"  ")
+                                    tex = []
+                                    for xe in val:
+                                        xe = val[xe]
+                                        po = xe.find(",")
+                                        xe = xe[po+1:-1]
+                                        tex.append(xe+"   ")
                                     imp = ""
                                     sep = ""
-                                    for d in val:
+                                    for d in vari:
                                         """
                                         for que se repite para agregar un menu de texto que nos diga cuales 
                                         variable estamos analindo
                                         """
-                                        imp = imp+texto[d-1]+" "
-                                        sep = sep+tex[d-1]+"  " 
+                                        imp = imp+texto[d-1]
+                                        sep = sep+tex[d-1]
                                     print ("                      "+imp)
                                     print ("                      "+sep,end="\n\n")
                                     dest = 1
@@ -450,7 +486,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
                                     lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
                                     info = info[pos+1:]
                                 lista = []
-                                for c in val:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
+                                for c in vari:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
                                     lista.append(float(lis[c]))
                                 """
                                 imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
@@ -482,6 +518,7 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error):
         month = datetime.date.today().month #Averigua el mes del sistema
         year = datetime.date.today().year #Averigua el año del sistema
         ava = 0
+        #print (day,month,year)
         while ava == 0:#se repte para saber lo que quiere hacer le usuario
             ava = Error("\nIngresa el periodo de tiempo a buscar\n\n\t1) Ultimos 7 Dias\n\t2) Ultimos 30 dias\n\t3) Elegir fechas manualmente\n\n\n\t4) Volver al menu principal")
             if ava > 4 or ava < 0:

@@ -40,7 +40,7 @@ def Error_float(tex):
         except ValueError:#en caso de ser incorrecto sige con el programa hasta que sea correcto imprimiendo un mensaje de valor incorrecto
             print (("\n"*224)+"Valor Incorrecto reingrese")
     return y#retorna el valro entero
-def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save):
+def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,val,save):
     """
     Parameters
     ----------
@@ -132,7 +132,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                         st = (esta+","+st)
                         dic_est[nume] = st #agrega dicho nombre a la varibale dic_est que es la que contine la infomacion de las estaciones 
                         #print (dic_est)
-                        dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                        dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                         print ("\n\n\n\n\n\nYa fue agregada la nueva estacion")
                         print ("Recuerda que se agrega en la ultima posicon de estacion disponible para el municipio")
                         ava = False
@@ -182,7 +182,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                     esta = i
                             dic_est[esta] = name
                             #GUarda toda la infmacion en las nuevas varibales de archivos que conserve datos
-                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                             print ("\n"*224)
                             print ("Edicion completada\n\n")
                     elif avanzar == 3 : #EN caso de que el administrador quiera eliminar alguna estacion
@@ -228,7 +228,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 if seguir == 1: # en casod e que si se quiera borrar con todos los datos seleccioandos
                                     del est[esta] #elimina los datos dentro e est
                                     del dic_est[esta] #elimina la estacion como tal
-                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                                     print ("\n"*224)
                                     print ("Edicion completada\n\n")
                                 elif seguir == 2:
@@ -237,7 +237,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                             else:
                                 del est[esta] #en caso de que no haya datos asocidos directaemnte elimina la variable
                                 del dic_est[esta] #elimina la varibel dentro del diccionario de etaciones
-                                dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                                dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                                 print ("\n"*224)
                                 print ("Edicion completada\n\n")
                 elif conti == 2 : # En caso de que se quiera trabajar ocn los usuarios
@@ -300,7 +300,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                 lis = lis[pos+1:]
                             dic_usuarios[clave] = lista# se agrega la variable a la lista de usuarios
                             #se guarda la infromacion con la funcion save
-                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                             #print (dic_usuarios)
                             print ("\n\n\n\n\n\nYa fue agregado el nuevo usuario")
                             ava = False
@@ -366,7 +366,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                     dato[2] = tip
                             dic_usuarios[doc] = dato
                             #guarda la informacion para continuar trabajando
-                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                             print ("\n"*224)
                             print ("Edicion completada\n\n")
                             ava = False
@@ -386,7 +386,7 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                     doc = "1"
                             del dic_usuarios[doc] #directaemnte elimina el usuario  
                             #guarda la informacon en los documentos
-                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                            dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                             print ("\n"*224)
                             print ("Edicion completada\n\n") #imprime que la edicion ha sido completanda
                             ava = False
@@ -442,20 +442,34 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                 ava = 0
                                             elif ava == 1:#en caos de que queramos listar
                                                 print ("\n\n La informacion es del municipio de ",dic_muni[muni][0].upper()," para la estacion de ",dic_muni[muni][1][esta][0].upper(),"\n\n")
-                                                texto = ["   PM10 "," PM2.5 ","Temp","Humedad"]#posibles cantidades de datos
-                                                tex = ["   μg/m³","μg/m³"," °C ","  %   "]
+                                                texto = []
+                                                for se in val:
+                                                    if len(se) < 8:
+                                                        texto.append(se+"  ")
+                                                    else:
+                                                        texto.append(se[:7]+"  ")
+                                                tex = []
+                                                for xe in val:
+                                                    xe = val[xe]
+                                                    po = xe.find(",")
+                                                    xe = xe[po+1:-1]
+                                                    tex.append(xe+"   ")
                                                 imp = ""
                                                 sep = ""
-                                                val = [1,2,3,4]
-                                                for i in val:#toma las valores completas val para el trabajo completo
+                                                valor = []
+                                                can = len(val)
+                                                for se in range (can):
+                                                    se = se + 1
+                                                    valor.append(se)
+                                                for i in valor:#toma las valores completas val para el trabajo completo
                                                     """
                                                     for que se repite para agregar un menu de texto que nos diga cuales 
                                                     variable estamos analindo
                                                     """
                                                     imp = imp+texto[i-1]+" "
                                                     sep = sep+tex[i-1]+"  " 
-                                                print ("                      "+imp)
-                                                print ("                      "+sep,end="\n\n")
+                                                print ("                        "+imp)
+                                                print ("                        "+sep,end="\n\n")
                                                 st = dic_municipios[muni][0]
                                                 estacion = dic_muni[muni][1][ubi][0]
                                                 st = (estacion+","+st)
@@ -488,55 +502,54 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
                                                     now = datetime.datetime.now()
                                                     now = now.strftime("%Y-%m-%d %T")
                                                     print ("Con un codigo que es la siguiente fecha y hora = ",now)
-                                                    conti = 0
-                                                    while conti == 0:#repite para el ingreso de pm10
-                                                        #debe retornar un valor de tipo flotante
-                                                        pm10 = Error_float("\n\nIngrese el valor para PM 10 , el valor debe estar en μg/m³\ndentro de un rango de [ 0.0 : 100.0 ]\nEn caso de no tener registro PM 10 ingresar [ ND] o -999")
-                                                        if pm10 == -999 or pm10 <= 100 and pm10 >= 0:
-                                                            conti = 1
-                                                        else:
-                                                            print ("\n"*224)
-                                                            print ("Valor fuera del rango\n")
-                                                    pm10 = str(pm10)#vuelve eld ato ingresado que es de tipo flotate una cadena de caracteres
-                                                    conti = 0
-                                                    while conti == 0:# trabaja para el ingreso de pm25
-                                                        #debe retornar un valro de tipo flotante
-                                                        pm25 = Error_float("\n\nIngrese el valor para PM 2.5 , el valor debe estar en μg/m³\ndentro de un rango de [ 0.0 : 200.0 ]\nEn caso de no tener registro PM 2.5 ingresar [ ND] o -999")
-                                                        if pm25 == -999 or pm25 <= 200 and pm25 >= 0:
-                                                            conti = 1
-                                                        else:
-                                                            print ("\n"*224)
-                                                            print ("Valor fuera del rango\n")
-                                                    pm25 = str(pm25) #convierte a str el valor float de pm25
-                                                    conti = 0
-                                                    while conti == 0:#trabaja para le ingreso de tem
-                                                        tem = Error_float("\n\nIngrese el valor para la TEMPERATURA , el valor debe estar en grados [ °C ]\ndentro de un rango de [ -20.0 : 50.0 ]\nEn caso de no tener registro TEMPERATURA ingresar [ ND] o -999")
-                                                        if tem == -999 or tem <= 50 and tem >= -20:
-                                                                conti = 1
-                                                        else:
-                                                            print ("\n"*224)
-                                                            print ("Valor fuera del rango\n")
-                                                    tem = str(tem)#conierte a str el valor de tem
-                                                    conti = 0
-                                                    while conti == 0:#trabaja con el valor de hum
-                                                        hum = Error_float("\n\nIngrese el valor para la HUMEDAD , el valor debe estar en porcentaje [ % ]\ndentro de un rango de [ 0.0 : 100.0 ]\nEn caso de no tener registro de HUMEDAD ingresar [ ND] o -999")
-                                                        if hum == -999 or hum <= 100 and hum >= 0:
-                                                                conti = 1
-                                                        else:
-                                                            print ("\n"*224)
-                                                            print ("Valor fuera del rango\n")
-                                                    hum = str(hum)# crea una cadena de caracteres el valor de hum
+                                                    texto = []
+                                                    for se in val:
+                                                        texto.append(se+"  ")
+                                                    tex = []
+                                                    for xe in val:
+                                                        xe = val[xe]
+                                                        po = xe.find(",")
+                                                        xe = xe[po+1:-1]
+                                                        tex.append(xe+"   ")
+                                                    ran = []
+                                                    for xe in val:
+                                                        xe = val[xe]
+                                                        po = xe.find(",")
+                                                        xe = xe[1:po]
+                                                        fo = []
+                                                        po = xe.find(":")
+                                                        bajo = xe[:po]
+                                                        alto = xe[po+1:]
+                                                        fo.append(float(bajo))
+                                                        fo.append(float(alto))
+                                                        ran.append(fo)     
+                                                    conti = len(val)
+                                                    agre = ""
+                                                    for re in range (conti):#repite para el ingreso de variables
+                                                        expo = 0
+                                                        while expo == 0:
+                                                            #debe retornar un valor de tipo flotante
+                                                            pm10 = Error_float("\n\nIngrese el valor para "+texto[re].upper()+", el valor debe estar en ( "+tex[re]+")\ndentro de un rango de [ "+str(ran[re][0])+":"+str(ran[re][1])+" ] \nEn caso de no tener registro PM 10 ingresar [ ND] o -999")
+                                                            if pm10 == -999 or pm10 <= ran[re][1] and pm10 >= ran[re][0]:
+                                                                expo = 1
+                                                            else:
+                                                                print ("\n"*224)
+                                                                print ("Valor fuera del rango\n")
+                                                        pm10 = str(pm10)#vuelve eld ato ingresado que es de tipo flotate una cadena de caracteres
+                                                        agre = agre + pm10 + ","
+                                                    agre = agre[:-1]   
                                                     st = dic_municipios[muni][0]
                                                     estacion = dic_muni[muni][1][ubi][0]
                                                     st = (estacion+","+st)#forma la lista segun al esatcion que se solicita
                                                     for i in dic_est:
                                                         if dic_est[i] == st:
                                                             estac = i#conocemos e estacion estamos trabajado en el diccionario dic_est
-                                                    est[estac][now]= ("{"+pm10+","+pm25+","+tem+","+hum+"}")#imprime dicho vlaor en el diccioanrio est
+                                                    est[estac][now]= ("{"+agre+"}")#imprime dicho vlaor en el diccioanrio est
                                                     ava = 24
                                                     #guarda toda la infomraicon el documento
-                                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est = save(dic_usuarios,lista_municipios,dic_est,est)
+                                                    dic_municipios,dic_muni,dic_usuarios,lista_municipios,dic_est,est,val = save(dic_usuarios,lista_municipios,dic_est,est,val)
                                                     print ("\n"*224)
+                                                    print ("Medida Agregagada CORRECTAMENTE\n")
                                                     while ava == 24:#preungta la continuidad
                                                         ava = Error("Que desea hacer\n\n\t1) Volver al menu anterior\n\n\t2) Ingresar otra medida")
                                                         if ava > 2 or ava <= 0:
@@ -554,4 +567,4 @@ def registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,d
             print ("\n\nValor fuera del rango\n\n")#en caso de que el valro este duera del rango de type
     return ava#retorna el valro de ava como falso en ambos casos
 #tipo =  "Operador"
-#s  = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,save)
+#s  = registrado(tipo,Error,Error_float,dic_usuarios,dic_municipios,dic_muni,est,dic_est,lista_municipios,val,save)

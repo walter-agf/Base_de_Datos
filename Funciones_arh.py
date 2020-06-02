@@ -106,17 +106,32 @@ def dic_2(arh,dic_municipios):
     return diccio,est,dic_est#Retorna el nuevo diccionario que es en realidad el original mutado
 #dic_municipios_2 = dic_2(dic_municipios)
 #print ("\n",dic_municipios_2)
+def dic_val(arh):
+    x = arh.readline()
+    z = x.count(";")
+    val = {}
+    for i in range (z+1):
+        pos = x.find(";")
+        con = x[:pos]
+        x = x[pos+1:]
+        pos = con.find("[")
+        val[con[:pos]] = con[pos:]
+    x = arh.readline()
+    return arh,val
 def dic_3(arh,est):
     #print (est)
     x = arh.readline()
-    while x != "\n":
+    while x != "":
+        #print (x)
         pos = x.find(";")
         date = x[:pos]
         x = x[pos+1:]
         pos = x.find(";")
         esta = x[:pos]
         info = x[pos+1:-1]
-        est[esta][date] = info  
+        #print(esta)
+        #print(date)
+        est[esta][date] = info
         x = arh.readline()
     return est
         
