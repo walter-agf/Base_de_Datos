@@ -390,13 +390,21 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error,val):
                                 info = est[i][a]
                                 info = info[1:-1]
                                 lis = {}#crea el diccionario en lis para su analizis de valores
-                                for b in range (1,5):
+                                for b in range (1,len(val)+1):
                                     pos = info.find(",")
-                                    lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
-                                    info = info[pos+1:]
+                                    #print (pos,"      ",info[:pos])
+                                    if pos == -1:
+                                        lis[b] = info[:]
+                                    else:
+                                        lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
+                                        info = info[pos+1:]
                                 lista = []
                                 for c in vari:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
-                                    lista.append(float(lis[c]))
+                                    #print (lis[c])
+                                    try:
+                                        lista.append(float(lis[c]))
+                                    except:
+                                        lista.append(lis[c])
                                 """
                                 imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
                                 """
@@ -481,13 +489,21 @@ def visua_visi(dic_municipios,dic_muni,est,dic_est,Error,val):
                                 info = est[i][a]
                                 info = info[1:-1]
                                 lis = {}#crea el diccionario en lis para su analizis de valores
-                                for b in range (1,5):
+                                for b in range (1,len(val)+1):
                                     pos = info.find(",")
-                                    lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
-                                    info = info[pos+1:]
+                                    #print (pos,"      ",info[:pos])
+                                    if pos == -1:
+                                        lis[b] = info[:]
+                                    else:
+                                        lis [b] = info[:pos]#agrega ala diccionario de lis todas las posciones posibles analisis de valores las cuatro
+                                        info = info[pos+1:]
                                 lista = []
                                 for c in vari:#usando dicha lista el for itera segun las variables var y agrega solo estas posibilidades de lis a la lista listas
-                                    lista.append(float(lis[c]))
+                                    #print (lis[c])
+                                    try:
+                                        lista.append(float(lis[c]))
+                                    except:
+                                        lista.append(lis[c])
                                 """
                                 imprime segun la lista definida lso valores de ubu como ubicacion, la lista ya creada con los valores dados la ubicacion en municipios y la ubicacion en esatacion
                                 """
